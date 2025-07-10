@@ -3,6 +3,7 @@ services:
     image: "opsdemo:${IMAGE_TAG}"
     environment:
       - GREETING=${GREETING}
+      - UP_DELAY_MS=${UP_DELAY_MS}
     networks:
       - traefik-public
     deploy:

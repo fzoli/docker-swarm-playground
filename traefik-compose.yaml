@@ -1,0 +1,30 @@
+version: '3.9'
+
+networks:
+  traefik-public:
+    external: true
+
+services:
+  traefik:
+    image: traefik:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - --providers.swarm.endpoint=unix:///var/run/docker.sock
+      - --entryPoints.web.address=:88
+      - --api.dashboard=false
+      - --api.insecure=true
+    ports:
+      - target: 88
+        published: 88
+        protocol: tcp
+        mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik-public
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager

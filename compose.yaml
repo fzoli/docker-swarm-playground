@@ -1,0 +1,27 @@
+services:
+  demo:
+    image: "opsdemo:${IMAGE_TAG}"
+    environment:
+      - GREETING=${GREETING}
+    networks:
+      - traefik-public
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.opsdemo.rule=Host(`opsdemo.local`)"
+        - "traefik.http.routers.opsdemo.entrypoints=web"
+        - "traefik.http.services.opsdemo.loadbalancer.server.port=8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  traefik-public:
+    external: true

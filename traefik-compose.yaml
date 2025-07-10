@@ -26,6 +26,8 @@ services:
       - traefik-public
     deploy:
       mode: global
+      restart_policy:
+        condition: any
       placement:
         constraints:
           - node.role == manager

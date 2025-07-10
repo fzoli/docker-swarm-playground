@@ -5,6 +5,7 @@ services:
       - GREETING=${GREETING}
       - UP_DELAY_MS=${UP_DELAY_MS}
       - DOWN_DELAY_MS=${DOWN_DELAY_MS}
+      - MAX_COUNT=${MAX_COUNT}
     networks:
       - traefik-public
     deploy:

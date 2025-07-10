@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger
 @RestController
 class GreetingController(
     @param:Value("\${GREETING:Hello}") private val greeting: String,
+    private val healthService: HealthService,
 ) {
 
     private val hostname: String = InetAddress.getLocalHost().hostName
@@ -17,6 +18,7 @@ class GreetingController(
     @GetMapping("/greeting")
     fun greet(): String {
         val count = counter.incrementAndGet()
+        healthService.notify(count)
         val formattedCount = String.format("%04d", count)
         return "[$formattedCount] $greeting from $hostname"
     }

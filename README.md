@@ -42,7 +42,7 @@ Docker swarm does not use `.env` file, so we export the env vars into the shell 
 while true; do
   curl http://opsdemo.local:88/greeting
   echo ''
-  sleep 1
+  sleep 0.2
 done
 ```
 

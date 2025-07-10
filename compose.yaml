@@ -11,7 +11,7 @@ services:
       update_config:
         parallelism: 1
         delay: 0s
-        monitor: 40s
+        monitor: 10s
         order: start-first
       restart_policy:
         condition: on-failure
@@ -26,7 +26,7 @@ services:
         - "traefik.http.services.opsdemo.loadbalancer.healthcheck.scheme=http"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
-      start_period: 35s
+      start_period: 10s
       interval: 10s
       timeout: 3s
       retries: 5

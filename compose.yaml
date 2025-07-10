@@ -8,6 +8,11 @@ services:
       - MAX_COUNT=${MAX_COUNT}
       - DIE_MODE=${DIE_MODE}
       - DIE_EXIT_CODE=${DIE_EXIT_CODE}
+#    ports: # without Traefik
+#      - target: 8080
+#        published: 89
+#        protocol: tcp
+#        mode: ingress
     networks:
       - traefik-public
     deploy:

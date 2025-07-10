@@ -53,3 +53,11 @@ while true; do
   sleep 1
 done
 ```
+
+# Cleanup
+
+```sh
+docker stack rm traefik-stack
+docker stack rm opsdemo-stack
+docker network rm traefik-public
+```

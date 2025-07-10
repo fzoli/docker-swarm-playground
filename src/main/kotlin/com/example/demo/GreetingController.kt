@@ -7,7 +7,9 @@ import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicInteger
 
 @RestController
-class GreetingController(@param:Value("\${GREETING:Hello}") private val greeting: String) {
+class GreetingController(
+    @param:Value("\${GREETING:Hello}") private val greeting: String,
+) {
 
     private val hostname: String = InetAddress.getLocalHost().hostName
     private var counter = AtomicInteger(0)

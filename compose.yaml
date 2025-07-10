@@ -4,6 +4,7 @@ services:
     environment:
       - GREETING=${GREETING}
       - UP_DELAY_MS=${UP_DELAY_MS}
+      - DOWN_DELAY_MS=${DOWN_DELAY_MS}
     networks:
       - traefik-public
     deploy:

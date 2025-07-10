@@ -10,6 +10,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command:
+      - --providers.docker=true # to handle standard containers too outside swarm on local machine
       - --providers.swarm.endpoint=unix:///var/run/docker.sock
       - --entryPoints.web.address=:88
       - --api.dashboard=false

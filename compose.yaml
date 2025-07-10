@@ -17,6 +17,8 @@ services:
         condition: on-failure
       labels:
         - "traefik.enable=true"
+        - "traefik.swarm.network=traefik-public"
+        - "traefik.swarm.lbswarm=true"
         - "traefik.http.routers.opsdemo.rule=Host(`opsdemo.local`)"
         - "traefik.http.routers.opsdemo.entrypoints=web"
         - "traefik.http.services.opsdemo.loadbalancer.server.port=8080"

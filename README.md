@@ -18,13 +18,13 @@ Only for local playground. On a real env the public IP must be used instead of l
 docker network create --driver overlay --attachable traefik-public
 ```
 
-# Prepare Traefik
+# Deploy Traefik
 
 ```sh
 docker stack deploy -c traefik-compose.yaml traefik-stack --detach=true
 ```
 
-# Deploy
+# Deploy opsdemo
 
 ```sh
 set -o allexport

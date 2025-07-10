@@ -11,18 +11,18 @@ services:
     networks:
       - traefik-public
     deploy:
-      replicas: 2
+      replicas: 2 # 2 replicas give you zero downtime in case of unhealthy state; 1 replica gives you zero downtime during release
       update_config:
         parallelism: 1
         delay: 0s
         monitor: 10s
         order: start-first
       restart_policy:
-        condition: on-failure
+        condition: any # or on-failure if it can be finished
       labels:
         - "traefik.enable=true"
         - "traefik.swarm.network=traefik-public"
-        - "traefik.swarm.lbswarm=true"
+        - "traefik.swarm.lbswarm=true" # for zero downtime (Traefik LB hangs when container goes away)
         - "traefik.http.routers.opsdemo.rule=Host(`opsdemo.local`)"
         - "traefik.http.routers.opsdemo.entrypoints=web"
         - "traefik.http.services.opsdemo.loadbalancer.server.port=8080"

@@ -31,7 +31,7 @@ set -o allexport
 source ./.env
 set +o allexport
 
-docker stack deploy -c compose.yaml opsdemo-stack --detach=true
+docker stack deploy -c compose.yaml opsdemo-stack --detach=true --prune
 ```
 
 Docker swarm does not use `.env` file, so we export the env vars into the shell session before executing deploy command.

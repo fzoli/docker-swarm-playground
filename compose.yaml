@@ -6,6 +6,8 @@ services:
       - UP_DELAY_MS=${UP_DELAY_MS}
       - DOWN_DELAY_MS=${DOWN_DELAY_MS}
       - MAX_COUNT=${MAX_COUNT}
+      - DIE_MODE=${DIE_MODE}
+      - DIE_EXIT_CODE=${DIE_EXIT_CODE}
     networks:
       - traefik-public
     deploy:

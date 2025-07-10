@@ -24,6 +24,9 @@ docker network create --driver overlay --attachable traefik-public
 docker stack deploy -c traefik-compose.yaml traefik-stack --detach=true
 ```
 
+Add this line to hosts file:
+`127.0.0.1 opsdemo.local`
+
 # Deploy opsdemo
 
 ```sh
@@ -60,4 +63,11 @@ done
 docker stack rm traefik-stack
 docker stack rm opsdemo-stack
 docker network rm traefik-public
+```
+
+Remove `opsdemo.local` from hosts file.
+
+Delete swarm:
+```sh
+docker swarm leave --force
 ```

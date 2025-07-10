@@ -22,10 +22,11 @@ services:
         - "traefik.http.routers.opsdemo.rule=Host(`opsdemo.local`)"
         - "traefik.http.routers.opsdemo.entrypoints=web"
         - "traefik.http.services.opsdemo.loadbalancer.server.port=8080"
-        - "traefik.http.services.opsdemo.loadbalancer.healthcheck.path=/actuator/health"
-        - "traefik.http.services.opsdemo.loadbalancer.healthcheck.interval=10s"
-        - "traefik.http.services.opsdemo.loadbalancer.healthcheck.timeout=3s"
-        - "traefik.http.services.opsdemo.loadbalancer.healthcheck.scheme=http"
+        # In lbswarm mode Traefik healthcheck is useless:
+        #- "traefik.http.services.opsdemo.loadbalancer.healthcheck.path=/actuator/health"
+        #- "traefik.http.services.opsdemo.loadbalancer.healthcheck.interval=10s"
+        #- "traefik.http.services.opsdemo.loadbalancer.healthcheck.timeout=3s"
+        #- "traefik.http.services.opsdemo.loadbalancer.healthcheck.scheme=http"
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
       start_period: 10s

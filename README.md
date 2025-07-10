@@ -39,7 +39,15 @@ docker stack deploy -c compose.yaml opsdemo-stack --detach=true --prune
 
 Docker swarm does not use `.env` file, so we export the env vars into the shell session before executing deploy command.
 
+# Force re-deploy opsdemo
+
+```sh
+docker service update --force $(docker service ls --filter name=opsdemo-stack_demo -q)
+```
+
 # Test
+
+### Check communication
 
 ```sh
 while true; do
@@ -48,6 +56,8 @@ while true; do
   sleep 0.2
 done
 ```
+
+### Check containers
 
 ```sh
 while true; do

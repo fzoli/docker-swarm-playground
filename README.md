@@ -107,3 +107,9 @@ docker run --rm -e NVIDIA_VISIBLE_DEVICES= nvidia/cuda:12.4.1-base-ubuntu22.04 n
 ```
 
 No need for `--gpus all` argument thanks to `default-runtime`.
+
+# Zero downtime with Traefik + Swarm
+
+There is a Traefik bug: https://github.com/traefik/traefik/issues/11252
+We have to use `traefik.swarm.lbswarm=true` label on container to delegate load balance from Traefik to Docker Swarm.
+This is a perfect workaround if `replicas` = 1.

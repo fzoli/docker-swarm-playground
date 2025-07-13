@@ -6,7 +6,7 @@ docker build . -t opsdemo:latest
 
 # Prepare Docker swarm
 
-```
+```sh
 docker swarm init --advertise-addr 127.0.0.1
 ```
 
@@ -102,7 +102,7 @@ Note that `default-runtime` will change the runtime to `nvidia` from `runc`, so 
 You can limit accessible cards per container with env var: `NVIDIA_VISIBLE_DEVICES`
 
 For example:
-```
+```sh
 docker run --rm -e NVIDIA_VISIBLE_DEVICES= nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
 ```
 

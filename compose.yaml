@@ -3,6 +3,7 @@ services:
     image: "opsdemo:${IMAGE_TAG}"
     environment:
       - GREETING=${GREETING}
+      - GREETING_DELAY_MS=${GREETING_DELAY_MS}
       - UP_DELAY_MS=${UP_DELAY_MS}
       - DOWN_DELAY_MS=${DOWN_DELAY_MS}
       - MAX_COUNT=${MAX_COUNT}

@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
 @RestController
 class GreetingController(
     @param:Value("\${GREETING:Hello}") private val greeting: String,
+    @param:Value("\${GREETING_DELAY_MS:0}") private val greetingDelayMs: Long,
     private val healthService: HealthService,
 ) {
 
@@ -20,6 +21,7 @@ class GreetingController(
 
     @GetMapping("/greeting")
     fun greet(): String {
+        if (greetingDelayMs > 0) Thread.sleep(greetingDelayMs)
         val count = counter.incrementAndGet()
         healthService.notify(count)
         val formattedCount = String.format("%04d", count)

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.net.InetAddress
+import java.time.Instant
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -25,7 +26,7 @@ class GreetingController(
         val count = counter.incrementAndGet()
         healthService.notify(count)
         val formattedCount = String.format("%04d", count)
-        return "[$formattedCount] $greeting from $hostname"
+        return "[$formattedCount] $greeting from $hostname at ${Instant.now()}"
     }
 
     @GetMapping("/stream")
@@ -36,7 +37,7 @@ class GreetingController(
         executor.scheduleAtFixedRate({
             try {
                 val formattedCount = String.format("%04d", ++counter)
-                emitter.send("[$formattedCount] $greeting from $hostname")
+                emitter.send("[$formattedCount] $greeting from $hostname at ${Instant.now()}")
             } catch (ex: Exception) {
                 emitter.completeWithError(ex)
             }

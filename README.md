@@ -57,6 +57,15 @@ while true; do
 done
 ```
 
+```sh
+while true; do
+  curl http://opsdemo.local:88/stream
+  echo '---- ----'
+  echo ''
+  sleep 0.2
+done
+```
+
 ### Check containers
 
 ```sh

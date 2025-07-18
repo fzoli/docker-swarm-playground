@@ -112,7 +112,7 @@ You can limit accessible cards per container with env var: `NVIDIA_VISIBLE_DEVIC
 
 For example:
 ```sh
-docker run --rm -e NVIDIA_VISIBLE_DEVICES= nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+docker run --rm -e NVIDIA_VISIBLE_DEVICES=0 nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
 ```
 
 No need for `--gpus all` argument thanks to `default-runtime`.

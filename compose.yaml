@@ -16,6 +16,9 @@ services:
 #        mode: ingress
     networks:
       - traefik-public
+    volumes:
+      - ./demo:/demo
+      - ./demo.txt:/demo.txt
     deploy:
       replicas: 2 # 2 replicas give you zero downtime in case of unhealthy state; 1 replica gives you zero downtime during release
       update_config:

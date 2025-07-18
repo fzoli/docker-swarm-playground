@@ -27,6 +27,24 @@ docker stack deploy -c traefik-compose.yaml traefik-stack --detach=true
 Add this line to hosts file:
 `127.0.0.1 opsdemo.local`
 
+# Create storage
+
+```sh
+mkdir -p ./demo
+echo -n 'dir' > ./demo/demo.txt
+echo -n 'file' > ./demo.txt
+```
+
+# Delete storage
+
+```sh
+rm ./demo.txt
+```
+
+```sh
+rm -rf ./demo
+```
+
 # Deploy opsdemo
 
 ```sh

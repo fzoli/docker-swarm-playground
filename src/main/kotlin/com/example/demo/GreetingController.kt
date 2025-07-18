@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.io.File
 import java.net.InetAddress
 import java.time.Instant
 import java.util.concurrent.Executors
@@ -20,13 +21,16 @@ class GreetingController(
     private val hostname: String = InetAddress.getLocalHost().hostName
     private var counter = AtomicInteger(0)
 
+    private val directoryFile = File("/demo/demo.txt")
+    private val standaloneFile = File("/demo.txt")
+
     @GetMapping("/greeting")
     fun greet(): String {
         if (greetingDelayMs > 0) Thread.sleep(greetingDelayMs)
         val count = counter.incrementAndGet()
         healthService.notify(count)
         val formattedCount = String.format("%04d", count)
-        return "[$formattedCount] $greeting from $hostname at ${Instant.now()}"
+        return "[$formattedCount] $greeting from $hostname at ${Instant.now()} '${String(directoryFile.readBytes())}' '${String(standaloneFile.readBytes())}'"
     }
 
     @GetMapping("/stream")

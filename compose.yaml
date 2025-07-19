@@ -1,11 +1,13 @@
 services:
   demo:
     image: "opsdemo:${IMAGE_TAG}"
+    hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     environment:
       - GREETING=${GREETING}
       - GREETING_DELAY_MS=${GREETING_DELAY_MS}
       - UP_DELAY_MS=${UP_DELAY_MS}
       - DOWN_DELAY_MS=${DOWN_DELAY_MS}
+      - DOWN_SLOT=${DOWN_SLOT}
       - MAX_COUNT=${MAX_COUNT}
       - DIE_MODE=${DIE_MODE}
       - DIE_EXIT_CODE=${DIE_EXIT_CODE}
@@ -23,6 +25,7 @@ services:
         delay: 0s
         monitor: 10s
         order: start-first
+        failure_action: rollback # in case of failure, 'pause' leaves old deployment running even after new one becomes healthy; 'rollback' reverts all, including first container
       restart_policy:
         condition: any # or on-failure if it can be finished
       labels:

@@ -1,0 +1,101 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opsdemo-app
+  labels:
+    app: opsdemo
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: opsdemo
+  template:
+    metadata:
+      labels:
+        app: opsdemo
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: opsdemo-app
+          image: progfarkas/opsdemo:0.2.2
+          env:
+            - name: GREETING
+              value: "Hello 1"
+            - name: GREETING_DELAY_MS
+              value: "-1"
+            - name: UP_DELAY_MS
+              value: "3000"
+            - name: DOWN_DELAY_MS
+              value: "-1"
+            - name: DOWN_SLOT
+              value: ""
+            - name: MAX_COUNT
+              value: "-1"
+            - name: DIE_MODE
+              value: "false"
+            - name: DIE_EXIT_CODE
+              value: "1"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/prestop
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /actuator/prestop/10000
+                port: 8080
+                scheme: HTTP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: opsdemo-service
+spec:
+  selector:
+    app: opsdemo
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: opsdemo-ingress
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: opsdemo.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opsdemo-service
+                port:
+                  number: 8080

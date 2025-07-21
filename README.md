@@ -1,7 +1,7 @@
 # Build opsdemo image
 
 ```sh
-docker build . -t opsdemo:latest
+docker build . -t progfarkas/opsdemo:latest
 ```
 
 # Prepare Docker swarm

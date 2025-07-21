@@ -1,6 +1,6 @@
 services:
   demo:
-    image: "opsdemo:${IMAGE_TAG}"
+    image: "progfarkas/opsdemo:${IMAGE_TAG}"
     hostname: "{{.Service.Name}}.{{.Task.Slot}}"
     environment:
       - GREETING=${GREETING}

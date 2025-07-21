@@ -4,7 +4,7 @@ import org.springframework.boot.actuate.health.Health
 import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.stereotype.Component
 
-@Component
+@Component("startup")
 class StartupHealthIndicator(private val healthService: HealthService) : HealthIndicator {
 
     override fun health(): Health {

@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: opsdemo-app
-          image: progfarkas/opsdemo:0.2.2
+          image: progfarkas/opsdemo:0.3.0
           env:
             - name: GREETING
               value: "Hello 1"
@@ -46,14 +46,14 @@ spec:
             - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /actuator/prestop
+              path: /actuator/health/readiness
               port: 8080
             initialDelaySeconds: 20
             periodSeconds: 5
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 5

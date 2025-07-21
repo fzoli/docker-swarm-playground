@@ -14,6 +14,10 @@ class PreStopEndpoint {
     @Volatile
     private var preStop = false
 
+    fun isStopped(): Boolean {
+        return preStop
+    }
+
     @ReadOperation
     fun status(): ResponseEntity<String> {
         if (preStop) {

@@ -23,9 +23,9 @@ services:
       update_config:
         parallelism: 1
         delay: 0s
-        monitor: 10s
+        monitor: 60s
         order: start-first
-        failure_action: rollback # in case of failure, 'pause' leaves old deployment running even after new one becomes healthy; 'rollback' reverts all, including first container
+        failure_action: continue # in case of failure, 'pause' leaves old deployment running even after new one becomes healthy; 'rollback' reverts all
       restart_policy:
         condition: any # or on-failure if it can be finished
       labels:

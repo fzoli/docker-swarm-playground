@@ -1,0 +1,31 @@
+services:
+  demo:
+    image: "progfarkas/opsdemo:${IMAGE_TAG}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.opsdemol.entrypoints: web
+      traefik.http.routers.opsdemol.rule: Host(`opsdemol.local`)
+      traefik.http.services.opsdemol.loadbalancer.server.port: "8080"
+      traefik.docker.network: traefik-public
+    environment:
+      - GREETING=${GREETING}
+      - GREETING_DELAY_MS=${GREETING_DELAY_MS}
+      - UP_DELAY_MS=${UP_DELAY_MS}
+      - DOWN_DELAY_MS=${DOWN_DELAY_MS}
+      - DOWN_SLOT=${DOWN_SLOT}
+      - MAX_COUNT=${MAX_COUNT}
+      - DIE_MODE=${DIE_MODE}
+      - DIE_EXIT_CODE=${DIE_EXIT_CODE}
+    networks:
+      - traefik-public
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP"]
+      start_period: 10s
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  traefik-public:
+    external: true

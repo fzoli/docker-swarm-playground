@@ -11,11 +11,15 @@ services:
       - --providers.docker=true # to handle standard containers too outside swarm on local machine
       - --providers.swarm.endpoint=unix:///var/run/docker.sock
       - --entryPoints.web.address=:88
-      - --api.dashboard=false
+      - --api.dashboard=true
       - --api.insecure=true
     ports:
       - target: 88
         published: 88
+        protocol: tcp
+        mode: host
+      - target: 8080
+        published: 8088
         protocol: tcp
         mode: host
     volumes:

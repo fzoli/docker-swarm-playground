@@ -25,7 +25,7 @@ services:
         delay: 0s
         monitor: 60s
         order: start-first
-        failure_action: continue # in case of failure, 'pause' leaves old deployment running even after new one becomes healthy; 'rollback' reverts all
+        failure_action: pause # This is the safest mode in case of failure, but 'pause' keeps the old healthy deployment running even after the new one becomes healthy. Workaround: deploy twice (only after fixing the issue, because deploying two failing versions would result in two parallel failed deployments)
       restart_policy:
         condition: any # or on-failure if it can be finished
       labels:

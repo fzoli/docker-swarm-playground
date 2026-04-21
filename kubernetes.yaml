@@ -59,11 +59,19 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
           lifecycle:
-            preStop:
+            preStop: # https://engineering.rakuten.today/post/graceful-k8s-delpoyments/
               httpGet:
                 path: /actuator/prestop/10000
                 port: 8080
                 scheme: HTTP
+#             # or Kubernetes 1.30+
+#              sleep:
+#                seconds: 10
+
+# preStop is not required if Traefik is configured to use native LB via Helm chart:
+#providers:
+#  kubernetesIngress:
+#    nativeLBByDefault: true # note that this disables round-robin LB; not recommended
 
 ---
 

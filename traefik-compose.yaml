@@ -4,12 +4,14 @@ networks:
 
 services:
   traefik:
-    image: traefik:v3.4.4
+    image: traefik:v3.6.13
     extra_hosts:
       - "host.docker.internal:host-gateway"
     command:
       - --providers.docker=true # to handle standard containers too outside swarm on local machine
       - --providers.swarm.endpoint=unix:///var/run/docker.sock
+      - --providers.swarm.refreshSeconds=1 # https://github.com/traefik/traefik/issues/7886
+      - --providers.swarm.exposedByDefault=false
       - --entryPoints.web.address=:88
       - --api.dashboard=true
       - --api.insecure=true

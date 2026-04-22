@@ -1,0 +1,157 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opsdemo-app
+  labels:
+    app: opsdemo
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: opsdemo
+  template:
+    metadata:
+      labels:
+        app: opsdemo
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: opsdemo-app
+          image: progfarkas/opsdemo:0.3.0
+          env:
+            - name: GREETING
+              value: "Hello 1"
+            - name: GREETING_DELAY_MS
+              value: "-1"
+            - name: UP_DELAY_MS
+              value: "3000"
+            - name: DOWN_DELAY_MS
+              value: "-1"
+            - name: DOWN_SLOT
+              value: ""
+            - name: MAX_COUNT
+              value: "-1"
+            - name: DIE_MODE
+              value: "false"
+            - name: DIE_EXIT_CODE
+              value: "1"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop: # https://engineering.rakuten.today/post/graceful-k8s-delpoyments/
+              sleep:
+                seconds: 10
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: opsdemo-service
+spec:
+  selector:
+    app: opsdemo
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: opsdemo-gateway
+  namespace: ingress-traefik
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: websecure
+      port: 443
+      protocol: HTTPS
+      hostname: opsdemo.example.com
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        certificateRefs:
+          - name: opsdemo-tls
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: opsdemo-tls
+  namespace: ingress-traefik
+spec:
+  secretName: opsdemo-tls
+  issuerRef:
+    name: letsencrypt-gw-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - opsdemo.example.com
+
+---
+# HTTP -> HTTPS redirect
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: opsdemo-redirect
+spec:
+  parentRefs:
+    - name: traefik-gateway
+      namespace: ingress-traefik
+      sectionName: web
+  hostnames:
+    - opsdemo.example.com
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+
+---
+# HTTPS route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: opsdemo-route
+spec:
+  parentRefs:
+    - name: opsdemo-gateway
+      namespace: ingress-traefik
+      sectionName: websecure
+  hostnames:
+    - opsdemo.example.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: opsdemo-service
+          port: 8080
